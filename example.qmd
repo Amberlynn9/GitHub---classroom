@@ -10,3 +10,5 @@ editor: visual
 # Introduction
 
 This guide explains how to use Git, GitHub
+
+# Add new data folder
