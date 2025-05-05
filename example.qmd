@@ -11,4 +11,8 @@ editor: visual
 
 This guide explains how to use Git, GitHub
 
+
 # Add new data folder
+
+# Analyzing data folder
+
