@@ -9,10 +9,135 @@ editor: visual
 
 # Introduction
 
-This guide explains how to use Git, GitHub
+This guide explains how to use Git, GitHub, and command line interface (CLI) to manage version control effectively. It includes annotated command-line steps, explanations, and a screenshot of the rendered HTML from `example.qmd`.
 
 
-# Add new data folder
+# Create a New Rstudio Project and Knit QMD file
+Open RStudio, create a new project (`File → New Project → New Directory → New Project`), and inside it create a file named `example.qmd` with this content:
 
-# Analyzing data folder
+```qmd
+---
+title: "Git, GitHub and CLI: Assignment 2"
+author: "Nhu Nguyen"
+format: html
+fontsize: 11pt
+number-sections: true
+editor: visual
+---
+## Introduction
+
+This guide explains how to use Git, GitHub, and command line interface (CLI) to manage version control effectively. It includes annotated command-line steps, explanations, and a screenshot of the rendered HTML from `example.qmd`.
+
+```
+```{r}
+knitr::include_graphics("image/Picture1.png")
+```
+
+
+# Initialize Git and Make Initial Commit
+```terminal
+git init
+git add .
+git commit -m "Initial commit: add example.qmd and HTML output"
+```
+
+This starts version control and commits the project files. 
+
+# Link GitHub Repository and Push
+```terminal
+git remote add origin git@github.com:Amberlynn9/GitHub---classroom.git
+git branch -M main
+git push -u origin main
+```
+This pushes the project to GitHub.
+
+# Create a new branch and add changes
+Add new branch called testbranch
+```terminal
+git checkout -b testbranch
+```
+Edit example,qmd, add a new section, then commit and push
+
+```terminal
+git add example.qmd
+git commit -m "Add new section to example.qmd"
+git push -u origin testbranch
+```
+# Add a folder and amend the previous commit
+```terminal
+mkdir data
+cp "/c/User/Amber/Documents/ETC5513/assignment1/data/netflix_titles.csv" data/
+git add data/
+git commit --amend --no-edit
+git push origin testbranch --force
+
+```
+This makes it look like the data/ folder was part of the last commit all along. 
+
+# Modify main to cause conflict
+Switch back to main
+```terminal
+git checkout main
+```
+Make a conflicting change in example.qmd and commit
+```terminal
+git add example.qmd
+git commit -m "Conflicting change to example.qmd"
+git push
+```
+# Merge and resolve conflict
+```terminal
+git merge testbranch
+```
+I resolved conflict by manually deleting conflict markers like <<<<<<<, =======, and >>>>>>>, then :
+```terminal
+git add example.qmd
+git commit -m "Resolve merge conflict in example.qmd"
+git push
+```
+# Tag the commit
+```terminal
+git tag -a v1.0 -m "Version 1.0 after resolving merge"
+git push origin v1.0
+```
+# Delete the branch
+
+```terminal
+git branch -d testbranch
+git push origin --delete testbranch
+```
+# Show commit log in condensed form in the terminal
+
+```terminal
+$ git log --oneline                      main, origin/HEAD) Resolve merge conflict in exa
+07e4b40 (HEAD -> main, tag: v1.0, origin/main, origin/HEAD) Resolve merge conflict in example.qmd                          from Assignmnet 1
+1ed72de Conflicting change to example.qmd                                         nd HTML output
+928e798 Add data folder with netflix.csv
+from Assignmnet 1
+d5619a4 Add new section to example.qmd   /assignment 2 (main)
+82a8f5d Initial commit: add example.qmd and HTML output
+357544c Initial commit 
+```
+# Add a plot and undo the commit 
+
+## Plot section
+
+```{r}
+library(tidyverse)
+netflix_data <- read_csv("data/netflix_titles.csv")
+# Create a bar plot of the top 10 countries by count of titles
+netflix_data%>%
+  filter(!is.na(country)) %>%
+  count(country, sort = TRUE) %>%
+  slice_max(n, n = 10) %>%
+  ggplot(aes(x = reorder(country, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Countries by Netflix Titles",
+       x = "Country", y = "Number of Titles")
+
+```
+
+
+
 
